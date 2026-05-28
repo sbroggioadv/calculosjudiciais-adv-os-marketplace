@@ -1,0 +1,8 @@
+{
+  "name": "calculosjudiciais-adv-os",
+  "version": "0.1.0",
+  "description": "Sistema operacional do advogado em calculos judiciais brasileiros. 28 skills cobrindo civel, trabalhista, tributario, previdenciario, familia, criminal e consumidor: cumprimento de sentenca por TJ, RPV/precatorio, danos indenizatorios, debito condominial/locaticio, liquidacao trabalhista, verbas rescisorias, horas extras com reflexos, FGTS, atualizacao tributaria SELIC, RMI previdenciaria, alimentos atrasados, partilha de bens, pena de multa criminal, restituicao em dobro CDC, mais skills transversais diferenciais: parser auditor PJE-CALC PDF, comparador de calculos lado a lado, auditor de laudo pericial contabil, quesitos a perito, contra-laudo. Cache local de 6 indices oficiais (Selic, IPCA, IPCA-E, INPC, TR, Taxa Legal CC 406). Anti-halucinacao por design. Orquestrador calculos-master.",
+  "author": {
+    "name": "IA Combativa Adv-OS"
+  }
+}

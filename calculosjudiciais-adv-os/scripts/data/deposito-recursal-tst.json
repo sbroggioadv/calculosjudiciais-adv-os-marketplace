@@ -1,0 +1,47 @@
+{
+  "indice": "DEPOSITO_RECURSAL_TST",
+  "descricao": "Tabela anual de valores do deposito recursal trabalhista, fixada por Ato da Secretaria-Geral Judiciaria do TST (Ato SEGJUD.GP). Aplicada em Recurso Ordinario (RO), Recurso de Revista (RR), Embargos no TST (E-RR / E-ED-RR) e Agravo de Instrumento em Recurso de Revista (AIRR). Fundamento: CLT art. 899 §§ 1º a 7º.",
+  "fonte": "Tribunal Superior do Trabalho — Ato SEGJUD.GP",
+  "url_oficial": "https://www.tst.jus.br/web/corregedoria/atos-normativos-do-tst",
+  "url_consulta": "https://www.tst.jus.br/consulta-de-deposito-recursal",
+  "data_extracao": "2026-05-28",
+  "release_plugin": "v0.1.0",
+  "frequencia": "anual",
+  "unidade": "BRL",
+  "metodologia": "Valor fixo anual por modalidade recursal. Atualizacao publicada pelo TST em Ato SEGJUD.GP no inicio de cada exercicio (geralmente em julho ou agosto). Para recursos protocolados no ano X, aplicar o valor vigente em X. Se a parte e isenta (entidade beneficente, MEI, pessoa fisica beneficiaria de justica gratuita, microempresa com Lei Complementar 147/2014, etc), conferir hipoteses legais.",
+  "vigencias": {
+    "2024": {
+      "RO_recurso_ordinario": null,
+      "RR_recurso_revista": null,
+      "ED_embargos_no_TST": null,
+      "AIRR_agravo_instrumento": null,
+      "ato_referencia": "Ato SEGJUD.GP 2024 (preencher numero do ato)",
+      "data_publicacao": null
+    },
+    "2025": {
+      "RO_recurso_ordinario": null,
+      "RR_recurso_revista": null,
+      "ED_embargos_no_TST": null,
+      "AIRR_agravo_instrumento": null,
+      "ato_referencia": "Ato SEGJUD.GP 2025 (preencher numero do ato)",
+      "data_publicacao": null
+    },
+    "2026": {
+      "RO_recurso_ordinario": null,
+      "RR_recurso_revista": null,
+      "ED_embargos_no_TST": null,
+      "AIRR_agravo_instrumento": null,
+      "ato_referencia": "Ato SEGJUD.GP 2026 (preencher numero do ato)",
+      "data_publicacao": null
+    }
+  },
+  "isencoes_principais": [
+    "Beneficiario(a) de justica gratuita (CLT art. 790 §§ 3º e 4º + CPC arts. 98-102)",
+    "Entidade filantropica reconhecida de utilidade publica",
+    "Massa falida (Lei 11.101/2005)",
+    "Empresas em recuperacao judicial — debate em curso (REsp 1.359.041/SE; cf. tese local TRT)",
+    "Microempresa e Empresa de Pequeno Porte (LC 147/2014 — reducao a metade)",
+    "Empregador domestico (LC 150/2015 — reducao a metade)"
+  ],
+  "aviso": "PREENCHER ANTES DE PROTOCOLAR. Os valores estao como null (placeholder) — operador deve atualizar puxando do Ato SEGJUD.GP do TST do exercicio em curso, ou consultando a calculadora oficial do TST. Os valores sao atualizados ANUALMENTE — sempre cruzar com o Ato vigente. Esta tabela e cache de conveniencia, NUNCA substitui consulta direta ao TST."
+}

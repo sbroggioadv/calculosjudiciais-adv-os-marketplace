@@ -1,0 +1,447 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schemas/cowork-state.json",
+  "title": "Cowork State — Plugin Trabalhista-Adv-OS",
+  "description": "Estado persistente do workspace COWORK do usuário-cliente. Vive em <COWORK>/trabalhista/cowork-state.json. Atualizado a cada /start-trabalhista ou comando que modifica configuração. Plugin especializado em Direito e Processo do Trabalho brasileiro, atendendo os dois polos da Reclamação Trabalhista (reclamante e reclamada).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "created_at",
+    "updated_at",
+    "identity",
+    "cowork_path",
+    "areas",
+    "skills",
+    "suprema_corte",
+    "tom_voz"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Versão do schema. SemVer. Usado para migrations."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC. Timestamp do primeiro /start."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC. Timestamp da última modificação."
+    },
+    "plugin_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-z0-9.]+)?$",
+      "description": "Versão do plugin que criou/atualizou este state."
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["firm_name", "firm_slug", "advogado_nome"],
+      "properties": {
+        "firm_name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200,
+          "description": "Nome do escritório como aparece em papel timbrado."
+        },
+        "firm_slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "minLength": 2,
+          "maxLength": 50,
+          "description": "Slug para paths/IDs. Ex: 'silva-advocacia'."
+        },
+        "advogado_nome": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200,
+          "description": "Nome completo do advogado responsável."
+        },
+        "oab_numero": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9.]+$",
+          "description": "Número da OAB (só dígitos e pontos). Opcional."
+        },
+        "oab_uf": {
+          "type": ["string", "null"],
+          "pattern": "^[A-Z]{2}$",
+          "description": "UF da OAB. Ex: 'SP', 'RJ'. Opcional."
+        },
+        "cidade": {
+          "type": ["string", "null"],
+          "maxLength": 100
+        },
+        "uf": {
+          "type": ["string", "null"],
+          "pattern": "^[A-Z]{2}$"
+        },
+        "email": {
+          "type": ["string", "null"],
+          "format": "email",
+          "description": "Email de contato do escritório (para papel timbrado, pareceres, etc.)."
+        },
+        "telefone": {
+          "type": ["string", "null"],
+          "maxLength": 30
+        },
+        "endereco": {
+          "type": ["string", "null"],
+          "maxLength": 500
+        }
+      }
+    },
+    "cowork_path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path absoluto da pasta COWORK do usuário."
+    },
+    "persona_path": {
+      "type": "string",
+      "description": "Path absoluto do arquivo de persona. Normalmente <cowork_path>/trabalhista/persona.md"
+    },
+    "tom_voz": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["perfil", "intensidade_combativa"],
+      "properties": {
+        "perfil": {
+          "type": "string",
+          "enum": ["tecnico-combativo", "tecnico-cordial", "tecnico-didatico", "personalizado"],
+          "default": "tecnico-combativo",
+          "description": "Perfil de tom de voz. Default 'tecnico-combativo'. 'personalizado' = usuário compôs manualmente."
+        },
+        "intensidade_combativa": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 7,
+          "description": "Intensidade 0-10 do tom combativo. 0 = puramente técnico-cordial. 10 = máximo combativo. Ajustável dinamicamente."
+        },
+        "postura_default": {
+          "type": "string",
+          "description": "Postura default em peças e comunicações. Livre, frase curta. Ex: 'nunca suavizar teses; nunca proteger narrativa da parte adversa'."
+        },
+        "expressoes_assinatura": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Expressões características que o advogado quer ver em peças (opt-in, user-provided)."
+        },
+        "termos_a_evitar": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Palavras/expressões que o advogado NÃO quer ver nos outputs."
+        }
+      }
+    },
+    "areas": {
+      "type": "array",
+      "description": "Áreas de atuação ATIVAS. Cada uma gera uma pasta <cowork_path>/<area>/ com CLAUDE.md e MEMORY.md.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slug", "display_name"],
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[A-Z_-]+(/[A-Z_-]+)*$",
+            "description": "Slug em CAIXA-ALTA com hífen e/ou barra. Ex: 'CONTENCIOSO/CIVEL', 'CONTRATOS-EMPRESARIAIS'."
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Nome amigável. Ex: 'Contencioso Cível', 'Contratos Empresariais'."
+          },
+          "tipo_atuacao": {
+            "type": "string",
+            "enum": ["contencioso", "consultivo", "misto"],
+            "default": "misto"
+          },
+          "polo_predominante": {
+            "type": ["string", "null"],
+            "enum": ["autor", "reu", "ambos", null],
+            "description": "Polo em que o escritório atua predominantemente nessa área."
+          },
+          "subfolders": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": ["Clientes", "Processos", "Modelos", "Pesquisas", "Pareceres"],
+            "description": "Subpastas criadas dentro de <cowork>/<area>/."
+          },
+          "skills_sugeridas": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Skills sugeridas para esta área (usado pelo wizard na seleção de skills)."
+          },
+          "activated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["invariants", "opt_in_active", "opt_in_inactive"],
+      "description": "Skills ativas/inativas. Invariantes são SEMPRE ativas (não-removíveis).",
+      "properties": {
+        "invariants": {
+          "type": "array",
+          "description": "Skills SEMPRE ativas (não-removíveis): trabalhista-master (Tier 0 - orquestração + 25 PAs + 4 Camadas + 7 Protocolos) + suprema-corte-trabalhista (Tier 3 - auditoria R1-R4) + estilo-juridico-trabalhista (Tier 1 transversal) + memoria-de-caso-trabalhista (Tier 1, compartimentação de casos). Escape session-only da Suprema Corte via /corte off.",
+          "items": { "type": "string" },
+          "default": [
+            "trabalhista-master",
+            "suprema-corte-trabalhista",
+            "estilo-juridico-trabalhista",
+            "memoria-de-caso-trabalhista"
+          ]
+        },
+        "opt_in_active": {
+          "type": "array",
+          "description": "Skills opt-in que o usuário escolheu ativar no wizard.",
+          "items": { "type": "string" }
+        },
+        "opt_in_inactive": {
+          "type": "array",
+          "description": "Skills opt-in que o usuário optou por NÃO ativar (lembrado para re-oferecer depois).",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "suprema_corte": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "bypass_threshold_words"],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Suprema Corte ativa por default. Pode ser desativada via /corte off (session toggle)."
+        },
+        "bypass_threshold_words": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 200,
+          "description": "Tarefas com output < N palavras recebem sugestão de bypass. 0 = nunca sugerir bypass."
+        },
+        "auto_apply_to": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["pecas", "contratos", "pareceres", "comunicacao-cliente", "tudo"]
+          },
+          "default": ["pecas", "contratos", "pareceres"],
+          "description": "Tipos de tarefa em que Suprema Corte é aplicada automaticamente."
+        }
+      }
+    },
+    "tools": {
+      "type": "object",
+      "description": "Ferramentas externas próprias do escritório que o usuário já utiliza. Cada campo é opt-in — pode ser null/string vazia se não usado. Skills como `escritorio-advocacia` e `financeiro-juridico` leem esses campos para adaptar recomendações sem hardcoding de produtos específicos.",
+      "additionalProperties": false,
+      "properties": {
+        "gestao_processual": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre da ferramenta de gestão processual que o escritório utiliza (prazos, movimentações, relatórios). Plugin não recomenda produto — apenas registra o que o usuário informar."
+        },
+        "tarefas_projetos": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre da ferramenta de gestão de tarefas e projetos utilizada pelo escritório."
+        },
+        "transcricao_reunioes": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre do transcritor de reuniões e áudios. Preferência: solução local para respeitar sigilo profissional."
+        },
+        "crm_leads": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre do CRM utilizado para leads e relacionamento."
+        },
+        "email_provider": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre do provedor de email institucional do escritório."
+        },
+        "banco_psp": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre do banco ou PSP utilizado para cobrança, recebimento e pagamentos do escritório."
+        },
+        "contabilidade": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre do serviço de contabilidade ou ERP contábil — pode ser contador externo, ERP próprio, software em nuvem."
+        },
+        "armazenamento_nuvem": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre do serviço de armazenamento em nuvem. Atenção: NÃO é recomendado colocar a pasta COWORK dentro de pasta sincronizada (conflito com git e hooks)."
+        },
+        "assinatura_digital": {
+          "type": ["string", "null"],
+          "maxLength": 100,
+          "description": "Nome livre da plataforma de assinatura digital utilizada pelo escritório."
+        },
+        "outras": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["nome", "categoria"],
+            "properties": {
+              "nome": { "type": "string", "maxLength": 100 },
+              "categoria": { "type": "string", "maxLength": 80, "description": "Ex: 'calendário', 'videoconferência', 'gestão de marcas', 'calculadora jurídica'." },
+              "nota": { "type": "string", "maxLength": 300 }
+            }
+          },
+          "description": "Ferramentas adicionais que o usuário quer declarar. Skill `escritorio-advocacia` lê e integra."
+        }
+      }
+    },
+    "connectors": {
+      "type": "object",
+      "description": "Conectores oficiais da Anthropic (via Claude app ou Claude Code) que o usuário já conectou à sua conta. Skills leem para adaptar sugestões de automação. SEMPRE OPT-IN — nada habilitado por default.",
+      "additionalProperties": false,
+      "properties": {
+        "available": {
+          "type": "array",
+          "description": "Lista de conectores Anthropic disponíveis que o usuário declarou ter conectado.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "gmail",
+              "gdrive",
+              "gcalendar",
+              "gdocs",
+              "gsheets",
+              "slack",
+              "github",
+              "notion",
+              "asana",
+              "linear",
+              "jira",
+              "zoom",
+              "microsoft-outlook",
+              "microsoft-teams",
+              "microsoft-onedrive",
+              "dropbox",
+              "zapier",
+              "make",
+              "custom-mcp"
+            ]
+          }
+        },
+        "notes": {
+          "type": ["string", "null"],
+          "maxLength": 500,
+          "description": "Notas livres do usuário sobre conectores (ex: 'Gmail conectado apenas para conta @escritorio; Drive apenas na conta pessoal')."
+        }
+      }
+    },
+    "automations": {
+      "type": "object",
+      "description": "Automações agendadas que o usuário ativou via /start. Opt-in.",
+      "additionalProperties": false,
+      "properties": {
+        "email_triage": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "cron": { "type": "string" },
+            "mcp": { "type": "string", "description": "Nome do MCP conector (ex: 'gmail')." }
+          }
+        },
+        "meeting_triage": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "source_folder": { "type": "string" },
+            "cron": { "type": "string" }
+          }
+        },
+        "weekly_report": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "cron": { "type": "string", "default": "0 8 * * 1" }
+          }
+        },
+        "jurisprudence_watch": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "topics": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "cron": { "type": "string" }
+          }
+        }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "idioma": {
+          "type": "string",
+          "enum": ["pt-BR"],
+          "default": "pt-BR"
+        },
+        "output_format_preferido": {
+          "type": "string",
+          "enum": ["docx", "pdf", "md"],
+          "default": "docx"
+        },
+        "papel_timbrado_path": {
+          "type": ["string", "null"],
+          "description": "Path opcional para .docx de papel timbrado do usuário. Se null, usa template default do plugin."
+        },
+        "sync_folder_warning_acknowledged": {
+          "type": "boolean",
+          "default": false,
+          "description": "True se usuário reconheceu warning de pasta sincronizada (iCloud/OneDrive/Dropbox). Evita warning repetido."
+        },
+        "memory_evolver_session_muted": {
+          "type": "boolean",
+          "default": false,
+          "description": "Escape session-only: se true, o hook PostToolUse nao registra pending e a skill memory-evolver fica silenciada ate o fim da sessao. Acionado via /memory-evolver off. Reseta para false no proximo SessionStart por padrao (ou quando /memory-evolver on)."
+        },
+        "cowork_sync_session_muted": {
+          "type": "boolean",
+          "default": false,
+          "description": "Escape session-only: se true, avisos de divergencia multi-dispositivo ficam silenciados ate o fim da sessao. Acionado via /cowork-sync --mute."
+        }
+      }
+    },
+    "wizard_state": {
+      "type": "object",
+      "description": "Estado do wizard /start. Permite retomada se interrompido.",
+      "additionalProperties": false,
+      "properties": {
+        "completed": {
+          "type": "boolean",
+          "default": false
+        },
+        "current_step": {
+          "type": "string",
+          "description": "Passo atual se incompleto. Ex: 'identity', 'cowork_path', 'areas', 'skills', 'automations', 'review'."
+        },
+        "completed_steps": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "last_interaction_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

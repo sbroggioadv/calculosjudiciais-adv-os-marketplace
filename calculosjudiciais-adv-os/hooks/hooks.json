@@ -1,0 +1,14 @@
+{
+  "SessionStart": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "echo '[calculosjudiciais-adv-os] Plugin ativo. Comando: /calculos <tipo>. 28 skills: civel, trabalhista (parser PJE-CALC), tributario, previdenciario, familia, criminal, consumidor + transversais (auditor laudo pericial, comparador, quesitos). Orquestrador: calculos-master.'",
+          "timeout": 5
+        }
+      ]
+    }
+  ]
+}

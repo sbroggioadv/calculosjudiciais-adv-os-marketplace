@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "calculosjudiciais-adv-os-marketplace",
+  "description": "Marketplace oficial do plugin Calculosjudiciais-Adv-OS — sistema operacional do advogado em calculos judiciais brasileiros: civel, trabalhista, tributario, previdenciario, familia, criminal e consumidor. Diferenciais: parser auditor PJE-CALC PDF, comparador de calculos, auditor de laudo pericial contabil.",
+  "owner": {
+    "name": "IA Combativa Adv-OS"
+  },
+  "plugins": [
+    {
+      "name": "calculosjudiciais-adv-os",
+      "source": "./calculosjudiciais-adv-os",
+      "description": "Sistema operacional do advogado em calculos judiciais brasileiros. 34 skills em 5 Tiers cobrindo civel, trabalhista, tributario, previdenciario, familia, criminal e consumidor: cumprimento de sentenca por TJ, RPV/precatorio, danos indenizatorios, debito condominial/locaticio, revisao bancaria, liquidacao trabalhista, verbas rescisorias, horas extras + reflexos, FGTS, atualizacao tributaria SELIC, RMI previdenciaria, alimentos atrasados, partilha de bens, pena de multa criminal, restituicao em dobro CDC. Diferenciais transversais: parser auditor PJE-CALC PDF, comparador de calculos lado a lado, auditor de laudo pericial contabil, gerador de quesitos a perito, contra-laudo. Cache local de 6 indices oficiais (Selic, IPCA, IPCA-E, INPC, TR, Taxa Legal CC406 pos Lei 14.905/2024). Anti-halucinacao por design.",
+      "author": {
+        "name": "IA Combativa Adv-OS"
+      }
+    }
+  ]
+}
