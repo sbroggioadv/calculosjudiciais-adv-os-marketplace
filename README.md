@@ -16,22 +16,6 @@
 > 11/08/2026 em diante, para quem chega ao repositório sem ter adquirido.
 
 
-> ## ⚖️ Este repositório NÃO é software livre
->
-> O código fica visível para viabilizar a instalação no Claude/Cowork — não porque seja gratuito.
->
-> **CALCULOS JUDICIAIS ADV-OS — R$ 98,80, pagamento único** (sem assinatura, sem recorrência)
-> 👉 **[Adquirir a licença](https://pay.kirvano.com/d839e376-57cc-4335-bb0a-7a4986029367)**
->
-> **Ao forkar ou clonar este repositório você adere à [licença de uso](LICENSE)**, devendo efetuar o
-> pagamento no link acima e enviar o comprovante para **luis@sbroggio.com.br**.
->
-> Os forks são públicos no GitHub e são registrados pelo titular (data, conta e repositório).
->
-> **Já comprou?** Nada a fazer — sua licença cobre o uso e o fork para instalação. Este aviso vale de
-> 11/08/2026 em diante, para quem chega ao repositório sem ter adquirido.
-
-
 > Marketplace oficial do plugin **Calculosjudiciais-Adv-OS** para Claude Code.
 
 Sistema operacional do advogado brasileiro em **cálculos judiciais** — cível, trabalhista, tributário, previdenciário, família, criminal e consumidor.
